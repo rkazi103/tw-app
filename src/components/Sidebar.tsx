@@ -14,8 +14,12 @@ import SidebarRow from "./SidebarRow";
 
 const Sidebar: NextComponentType = () => {
   return (
-    <div className="flex flex-col">
-      <img className="h-10 w-10" src="/images/logo.png" alt="twiiter logo" />
+    <div className="col-span-2 flex flex-col items-center px-4 md:items-start">
+      <img
+        className="m-3 h-10 w-10"
+        src="/images/logo.png"
+        alt="twiiter logo"
+      />
 
       <SidebarRow Icon={HomeIcon} title="Home" />
       <SidebarRow Icon={HashtagIcon} title="Explore" />
