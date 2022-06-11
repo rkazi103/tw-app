@@ -1,8 +1,16 @@
 import { RefreshIcon } from "@heroicons/react/outline";
-import { NextComponentType } from "next";
+import { NextComponentType, NextPageContext } from "next";
+import { Tweet as TweetType } from "../types";
+import Tweet from "./Tweet";
 import TweetBox from "./TweetBox";
 
-const Feed: NextComponentType = () => {
+type HomeProps = {
+  tweets: TweetType[];
+};
+
+const Feed: NextComponentType<NextPageContext, any, HomeProps> = ({
+  tweets,
+}) => {
   return (
     <div className="col-span-7 border-x lg:col-span-5">
       <div className="flex items-center justify-between">
@@ -12,6 +20,12 @@ const Feed: NextComponentType = () => {
 
       <div>
         <TweetBox />
+      </div>
+
+      <div>
+        {tweets.map(tweet => (
+          <Tweet key={tweet._id} tweet={tweet} />
+        ))}
       </div>
     </div>
   );
