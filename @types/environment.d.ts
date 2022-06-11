@@ -3,5 +3,6 @@ namespace NodeJS {
     NEXT_PUBLIC_SANITY_DATASET: string;
     NEXT_PUBLIC_PROJECT_ID: string;
     SANITY_API_TOKEN: string;
+    NEXT_PUBLIC_BASE_URL: string;
   }
 }
