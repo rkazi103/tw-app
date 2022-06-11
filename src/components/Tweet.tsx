@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { NextComponentType, NextPageContext } from "next";
-import { Tweet as TweetType } from "../types";
+import { Comment as CommentType, Tweet as TweetType } from "../types";
 import Timeago from "react-timeago";
 import {
   ChatAlt2Icon,
@@ -8,6 +8,9 @@ import {
   SwitchHorizontalIcon,
   UploadIcon,
 } from "@heroicons/react/outline";
+import { useEffect, useState } from "react";
+import { fetchComments } from "../lib/data";
+import Comment from "./Comment";
 
 type TweetProps = {
   tweet: TweetType;
@@ -16,6 +19,15 @@ type TweetProps = {
 const Tweet: NextComponentType<NextPageContext, any, TweetProps> = ({
   tweet,
 }) => {
+  const [comments, setComments] = useState<CommentType[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      const comments: CommentType[] = await fetchComments(tweet._id);
+      setComments(comments);
+    })();
+  }, [tweet._id]);
+
   return (
     <div className="flex flex-col space-x-3 border-y border-gray-100 p-5">
       <div className="flex space-x-3">
@@ -53,7 +65,7 @@ const Tweet: NextComponentType<NextPageContext, any, TweetProps> = ({
       <div className="mt-5 flex justify-between">
         <div className="tweet-option">
           <ChatAlt2Icon className="h-5 w-5" />
-          <p>5</p>
+          <p>{comments.length}</p>
         </div>
 
         <div className="tweet-option">
@@ -68,6 +80,14 @@ const Tweet: NextComponentType<NextPageContext, any, TweetProps> = ({
           <UploadIcon className="h-5 w-5" />
         </div>
       </div>
+
+      {comments?.length > 0 && (
+        <div className="my-2 mt-5 max-h-44 space-y-5 overflow-y-scroll border-t border-gray-100 p-5">
+          {comments.map(comment => (
+            <Comment key={comment._id} comment={comment} />
+          ))}
+        </div>
+      )}
     </div>
   );
 };
