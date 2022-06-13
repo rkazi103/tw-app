@@ -4,5 +4,7 @@ namespace NodeJS {
     NEXT_PUBLIC_PROJECT_ID: string;
     SANITY_API_TOKEN: string;
     NEXT_PUBLIC_BASE_URL: string;
+    TWIITER_CLIENT_ID: string;
+    TWITTER_CLIENT_SECRET: string;
   }
 }
