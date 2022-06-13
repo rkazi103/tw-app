@@ -38,7 +38,7 @@ const Feed: NextComponentType<NextPageContext, any, HomeProps> = ({
       </div>
 
       <div>
-        <TweetBox />
+        <TweetBox setTweets={setTweets} />
       </div>
 
       <div>

@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { NextComponentType } from "next";
+import { NextComponentType, NextPageContext } from "next";
 import {
   CalendarIcon,
   EmojiHappyIcon,
@@ -7,10 +7,25 @@ import {
   PhotographIcon,
   SearchCircleIcon,
 } from "@heroicons/react/outline";
-import { MouseEventHandler, useRef, useState } from "react";
+import {
+  Dispatch,
+  MouseEventHandler,
+  SetStateAction,
+  useRef,
+  useState,
+} from "react";
 import { useSession } from "next-auth/react";
+import { Tweet, TweetBody } from "../types";
+import { fetchTweets } from "../lib/data";
+import toast from "react-hot-toast";
 
-const TweetBox: NextComponentType = () => {
+type TweetBoxProps = {
+  setTweets: Dispatch<SetStateAction<Tweet[]>>;
+};
+
+const TweetBox: NextComponentType<NextPageContext, any, TweetBoxProps> = ({
+  setTweets,
+}) => {
   const [inputText, setInputText] = useState<string>("");
   const { data: session } = useSession();
   const [imageUrlBoxOpen, setImageUrlBoxOpen] = useState<boolean>(false);
@@ -23,6 +38,37 @@ const TweetBox: NextComponentType = () => {
 
     setImageUrl(imageInputRef.current.value);
     imageInputRef.current.value = "";
+    setImageUrlBoxOpen(false);
+  };
+
+  const pushTweetToDb = async () => {
+    const tweetInfo: TweetBody = {
+      text: inputText,
+      username: session?.user?.name || "John Doe",
+      profileImg: session?.user?.image || "https://bit.ly/3MN71zE",
+      tweetImg: imageUrl,
+    };
+
+    await fetch(`/api/tweets`, {
+      body: JSON.stringify(tweetInfo),
+      method: "POST",
+    });
+
+    const newTweets = await fetchTweets();
+    setTweets(newTweets);
+
+    toast("Tweet Posted", {
+      icon: "🚀",
+    });
+  };
+
+  const createTweet: MouseEventHandler<HTMLButtonElement> = e => {
+    e.preventDefault();
+
+    pushTweetToDb();
+
+    setInputText("");
+    setImageUrl("");
     setImageUrlBoxOpen(false);
   };
 
@@ -60,6 +106,7 @@ const TweetBox: NextComponentType = () => {
             <button
               disabled={!inputText || !session}
               className="rounded-full bg-twitter px-5 py-2 font-bold text-white disabled:opacity-40"
+              onClick={createTweet}
             >
               Tweet
             </button>

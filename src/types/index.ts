@@ -32,3 +32,7 @@ export interface Comment extends CommentBody {
     _type: "reference";
   };
 }
+
+export type APIError = {
+  error: string;
+};
