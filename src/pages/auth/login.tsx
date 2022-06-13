@@ -24,6 +24,7 @@ const Login: NextPage<LoginProps> = ({ providers }) => {
             <button
               className="rounded-full bg-twitter p-5 text-white"
               onClick={() => signIn(provider.id, { callbackUrl: "/" })}
+              // onClick={() => console.log("i")}
             >
               Login with {provider.name}
             </button>

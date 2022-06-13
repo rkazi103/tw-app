@@ -8,15 +8,17 @@ import {
   SearchCircleIcon,
 } from "@heroicons/react/outline";
 import { useState } from "react";
+import { useSession } from "next-auth/react";
 
 const TweetBox: NextComponentType = () => {
   const [inputText, setInputText] = useState<string>("");
+  const { data: session } = useSession();
 
   return (
     <div className="flex space-x-2 p-5">
       <img
         className="mt-4 h-14 w-14 rounded-full object-cover"
-        src="/images/default-avatar.jpg"
+        src={session?.user?.image || "/images/default-avatar.jpg"}
         alt="Default Avatar"
       />
 
@@ -40,7 +42,7 @@ const TweetBox: NextComponentType = () => {
             </div>
 
             <button
-              disabled={!inputText}
+              disabled={!inputText || !session}
               className="rounded-full bg-twitter px-5 py-2 font-bold text-white disabled:opacity-40"
             >
               Tweet
