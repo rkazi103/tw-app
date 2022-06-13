@@ -1,6 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
 import { NextComponentType, NextPageContext } from "next";
-import { Comment as CommentType, Tweet as TweetType } from "../types";
+import {
+  Comment as CommentType,
+  CommentBody,
+  Tweet as TweetType,
+} from "../types";
 import Timeago from "react-timeago";
 import {
   ChatAlt2Icon,
@@ -8,9 +12,11 @@ import {
   SwitchHorizontalIcon,
   UploadIcon,
 } from "@heroicons/react/outline";
-import { useEffect, useState } from "react";
+import { FormEventHandler, useEffect, useState } from "react";
 import { fetchComments } from "../lib/data";
 import Comment from "./Comment";
+import { useSession } from "next-auth/react";
+import toast from "react-hot-toast";
 
 type TweetProps = {
   tweet: TweetType;
@@ -20,6 +26,9 @@ const Tweet: NextComponentType<NextPageContext, any, TweetProps> = ({
   tweet,
 }) => {
   const [comments, setComments] = useState<CommentType[]>([]);
+  const [commentBoxOpen, setCommentBoxOpen] = useState<boolean>(false);
+  const [commentText, setCommentText] = useState<string>("");
+  const { data: session } = useSession();
 
   useEffect(() => {
     (async () => {
@@ -27,6 +36,35 @@ const Tweet: NextComponentType<NextPageContext, any, TweetProps> = ({
       setComments(comments);
     })();
   }, [tweet._id]);
+
+  const createComment: FormEventHandler<HTMLFormElement> = async e => {
+    e.preventDefault();
+
+    const commentToast = toast.loading("Posting Comment...");
+
+    const commentInfo: CommentBody = {
+      comment: commentText,
+      tweetId: tweet._id,
+      username: session?.user?.name || "John Doe",
+      profileImg: session?.user?.image || "https://bit.ly/3MN71zE",
+    };
+
+    await fetch("/api/comments", {
+      body: JSON.stringify(commentInfo),
+      method: "POST",
+    });
+
+    toast.success("Comment Posted!", {
+      id: commentToast,
+    });
+    setCommentText("");
+    setCommentBoxOpen(false);
+
+    (async () => {
+      const comments: CommentType[] = await fetchComments(tweet._id);
+      setComments(comments);
+    })();
+  };
 
   return (
     <div className="flex flex-col space-x-3 border-y border-gray-100 p-5">
@@ -63,7 +101,10 @@ const Tweet: NextComponentType<NextPageContext, any, TweetProps> = ({
       </div>
 
       <div className="mt-5 flex justify-between">
-        <div className="tweet-option">
+        <div
+          onClick={e => session && setCommentBoxOpen(!commentBoxOpen)}
+          className="tweet-option"
+        >
           <ChatAlt2Icon className="h-5 w-5" />
           <p>{comments.length}</p>
         </div>
@@ -80,6 +121,25 @@ const Tweet: NextComponentType<NextPageContext, any, TweetProps> = ({
           <UploadIcon className="h-5 w-5" />
         </div>
       </div>
+
+      {commentBoxOpen && (
+        <form className="mt-3 flex space-x-3" onSubmit={createComment}>
+          <input
+            value={commentText}
+            onChange={e => setCommentText(e.target.value)}
+            className="flex-1 rounded-lg bg-gray-100 p-2 outline-none"
+            type="text"
+            placeholder="Write a comment..."
+          />
+          <button
+            disabled={!commentText}
+            className="text-twitter disabled:text-gray-200"
+            type="submit"
+          >
+            Post
+          </button>
+        </form>
+      )}
 
       {comments?.length > 0 && (
         <div className="my-2 mt-5 max-h-44 space-y-5 overflow-y-scroll border-t border-gray-100 p-5 scrollbar-hide">
