@@ -7,12 +7,24 @@ import {
   PhotographIcon,
   SearchCircleIcon,
 } from "@heroicons/react/outline";
-import { useState } from "react";
+import { MouseEventHandler, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
 
 const TweetBox: NextComponentType = () => {
   const [inputText, setInputText] = useState<string>("");
   const { data: session } = useSession();
+  const [imageUrlBoxOpen, setImageUrlBoxOpen] = useState<boolean>(false);
+  const [imageUrl, setImageUrl] = useState<string | undefined>("");
+  const imageInputRef = useRef<HTMLInputElement>(null);
+
+  const addImageToTweet: MouseEventHandler<HTMLButtonElement> = e => {
+    e.preventDefault();
+    if (!imageInputRef.current?.value) return;
+
+    setImageUrl(imageInputRef.current.value);
+    imageInputRef.current.value = "";
+    setImageUrlBoxOpen(false);
+  };
 
   return (
     <div className="flex space-x-2 p-5">
@@ -34,7 +46,11 @@ const TweetBox: NextComponentType = () => {
 
           <div className="flex items-center">
             <div className="flex flex-1 space-x-2 text-twitter">
-              <PhotographIcon className="h-5 w-5 cursor-pointer transition-transform duration-150 ease-out hover:scale-150" />
+              <PhotographIcon
+                onClick={() => setImageUrlBoxOpen(!imageUrlBoxOpen)}
+                className="h-5 w-5 cursor-pointer transition-transform duration-150 ease-out hover:scale-150"
+              />
+
               <SearchCircleIcon className="h-5 w-5" />
               <EmojiHappyIcon className="h-5 w-5" />
               <CalendarIcon className="h-5 w-5" />
@@ -48,6 +64,33 @@ const TweetBox: NextComponentType = () => {
               Tweet
             </button>
           </div>
+
+          {imageUrlBoxOpen && (
+            <form className="mt-5 flex rounded-lg bg-twitter/80 py-2 px-4">
+              <input
+                className="flex-1 bg-transparent p-2 text-white outline-none placeholder:text-white"
+                type="text"
+                placeholder="Enter Image URL..."
+                ref={imageInputRef}
+              />
+
+              <button
+                className="font-bold text-white"
+                type="submit"
+                onClick={addImageToTweet}
+              >
+                Add Image
+              </button>
+            </form>
+          )}
+
+          {imageUrl && (
+            <img
+              className="mt-10 h-40 w-full rounded-xl object-contain shadow-lg"
+              src={imageUrl}
+              alt="picture for tweet that will be posted"
+            />
+          )}
         </form>
       </div>
     </div>
