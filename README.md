@@ -86,3 +86,6 @@ cd src/studio
 sanity login
 sanity start
 ```
+
+# License
+[GNU General Public License](https://github.com/rkazi103/ig-ui-app/blob/main/LICENSE) © 2022 [Rayan Kazi](https://github.com/rkazi103)
