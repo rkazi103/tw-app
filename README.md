@@ -1,34 +1,88 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+# Twitter Clone
 
-First, run the development server:
+This is a clone of Twitter to show off my frontend development skills!
+
+## Authors
+
+- [@rkazi103](https://www.github.com/rkazi103)
+
+
+## Tech Stack
+
+**Client:** Next JS, TailwindCSS, Twitter API
+
+**Server:** Sanity CMS
+
+
+## Features
+
+- Authentication using Twitter Account
+- Full Tweeting functionality with the ability to add comments
+- Mobile first responsive design
+- Toast Notifications for excellent UX
+
+
+## Demo
+
+_Coming Soon_
+
+## Environment Variables
+
+To run this project, you will need to add the following environment variables to your .env file
+
+`NEXT_PUBLIC_PROJECT_ID`
+
+`NEXT_PUBLIC_SANITY_DATASET`
+
+`SANITY_API_TOKEN`
+
+`NEXT_PUBLIC_BASE_URL`
+
+`TWITTER_CLIENT_ID`
+
+`TWITTER_CLIENT_SECRET`
+
+`NEXTAUTH_SECRET`
+
+`NEXTAUTH_URL`
+## Run Locally
+
+Clone the project
 
 ```bash
-npm run dev
-# or
-yarn dev
+  git clone https://github.com/rkazi103/tw-app
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Go to the project directory
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+```bash
+  cd tw-app
+```
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+Install Next JS dependencies
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+```bash
+  yarn
+```
 
-## Learn More
+Install Sanity CMS dependencies
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm i -g @sanity/cli
+cd src/studio && yarn
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Start Next JS Server
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+```bash
+  yarn dev
+```
 
-## Deploy on Vercel
+Start Sanity Studio
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+```bash
+cd src/studio 
+sanity login
+sanity start
+```
