@@ -13,16 +13,24 @@ const Login: NextPage<LoginProps> = ({ providers }) => {
     <div className="flex min-h-screen w-full flex-col items-center justify-center">
       <Head>
         <title>Login</title>
+        <meta
+          name="description"
+          content="A clone of Twitter FOR EDUCATIONAL PURPOSES!!"
+        />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <img src="/images/twitter.png" alt="Spotify Logo" className="mb-5 w-52" />
+      <p className="font-bold">
+        This is NOT THE REAL APP!! It is built to show of my web development
+        skills 😊
+      </p>
 
       {providers &&
         Object.values(providers).map((provider: Provider) => (
           <div key={provider.name}>
             <button
-              className="rounded-full bg-twitter p-5 text-white"
+              className="mt-3 rounded-full bg-twitter p-5 text-white"
               onClick={() => signIn(provider.id, { callbackUrl: "/" })}
               // onClick={() => console.log("i")}
             >

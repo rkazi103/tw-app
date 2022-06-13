@@ -25,7 +25,7 @@ This is a clone of Twitter to show off my frontend development skills!
 
 ## Demo
 
-_Coming Soon_
+Click [here](https://tw-app.vercel.app/) to see a running demo of the app!
 
 ## Environment Variables
 
