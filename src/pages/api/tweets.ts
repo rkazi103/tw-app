@@ -1,7 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { groq } from "next-sanity";
 import { sanityClient } from "../../lib/sanity";
-import { APIError, Tweet, TweetBody } from "../../types";
+import { APIError, Tweet } from "../../types";
+import { TweetBody } from "../../types/validators";
 
 type GetResponseData = {
   tweets: Tweet[];
@@ -18,17 +19,17 @@ const handler = async (
 ) => {
   if (req.method === "GET") {
     const query = groq`
-    *[_type == "tweet" && !blockTweet] {
-      _id,
-      ...
-    } | order(_createdAt desc)
-  `;
+      *[_type == "tweet" && !blockTweet] {
+        _id,
+        ...
+      } | order(_createdAt desc)
+    `;
 
     const tweets: Tweet[] = await sanityClient.fetch(query);
 
     res.status(200).json({ tweets });
   } else if (req.method === "POST") {
-    const data: TweetBody = JSON.parse(req.body);
+    const data = TweetBody.parse(req.body);
 
     const mutations = {
       mutations: [

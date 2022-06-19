@@ -1,7 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { groq } from "next-sanity";
 import { sanityClient } from "../../lib/sanity";
-import { APIError, Comment, CommentBody } from "../../types";
+import { APIError, Comment } from "../../types";
+import { CommentBody } from "../../types/validators";
 
 type GetResponseData = {
   comments: Comment[];
@@ -18,30 +19,30 @@ const handler = async (
 ) => {
   if (req.method === "GET") {
     const query = groq`
-    *[_type == "comment" && references(*[_type == "tweet" && _id == $tweetId]._id)] {
-      _id,
-      ...
-    } | order(_createdAt desc)
-  `;
+      *[_type == "comment" && references(*[_type == "tweet" && _id == $tweetId]._id)] {
+        _id,
+        ...
+      } | order(_createdAt desc)
+    `;
 
     const { tweetId } = req.query;
     const comments: Comment[] = await sanityClient.fetch(query, { tweetId });
 
     res.status(200).json({ comments });
   } else if (req.method === "POST") {
-    const comment: CommentBody = JSON.parse(req.body);
+    const commentInfo = CommentBody.parse(req.body);
 
     const mutations = {
       mutations: [
         {
           create: {
             _type: "comment",
-            comment: comment.comment,
-            username: comment.username,
-            profileImg: comment.profileImg,
+            comment: commentInfo.comment,
+            username: commentInfo.username,
+            profileImg: commentInfo.profileImg,
             tweet: {
               _type: "reference",
-              _ref: comment.tweetId,
+              _ref: commentInfo.tweetId,
             },
           },
         },
