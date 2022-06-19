@@ -20,6 +20,7 @@ const Feed: NextComponentType<NextPageContext, any, HomeProps> = ({
     const refreshToast = toast.loading("Refreshing...");
 
     const tweets = await fetchTweets();
+
     setTweets(tweets);
 
     toast.success("Feed Updated!", {

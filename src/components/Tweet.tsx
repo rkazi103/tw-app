@@ -32,7 +32,7 @@ const Tweet: NextComponentType<NextPageContext, any, TweetProps> = ({
 
   useEffect(() => {
     (async () => {
-      const comments: CommentType[] = await fetchComments(tweet._id);
+      const comments = await fetchComments(tweet._id);
       setComments(comments);
     })();
   }, [tweet._id]);

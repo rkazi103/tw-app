@@ -1,37 +1,10 @@
-export type TweetBody = {
-  text: string;
-  username: string;
-  profileImg: string;
-  tweetImg?: string;
-};
+import { z } from "zod";
+import { Comment, CommentBody, Tweet, TweetBody } from "./validators";
 
-export interface Tweet extends TweetBody {
-  _id: string;
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  _type: "tweet";
-  blockTweet: boolean;
-}
-
-export type CommentBody = {
-  comment: string;
-  tweetId: string;
-  username: string;
-  profileImg: string;
-};
-
-export interface Comment extends CommentBody {
-  _id: string;
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  _type: "comment";
-  tweet: {
-    _ref: string;
-    _type: "reference";
-  };
-}
+export type Tweet = z.infer<typeof Tweet>;
+export type TweetBody = z.infer<typeof TweetBody>;
+export type Comment = z.infer<typeof Comment>;
+export type CommentBody = z.infer<typeof CommentBody>;
 
 export type APIError = {
   error: string;
